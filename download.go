@@ -155,7 +155,7 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 	var err error
 	switch value.(type) {
-	case *float32, float32:
+	case *float32:
 		var r float32
 		if text != "" {
 			s, err := strconv.ParseFloat(text, 32)
@@ -165,7 +165,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			r = float32(s)
 		}
 		return reflect.ValueOf(&r), nil
-	case *float64, float64:
+	case float32:
+		var r float32
+		if text != "" {
+			s, err := strconv.ParseFloat(text, 32)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			r = float32(s)
+		}
+		return reflect.ValueOf(r), nil
+	case *float64:
 		var s float64
 		if text != "" {
 			s, err = strconv.ParseFloat(text, 64)
@@ -175,7 +185,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			}
 		}
 		return reflect.ValueOf(&s), nil
-	case *int8, int8:
+	case float64:
+		var s float64
+		if text != "" {
+			s, err = strconv.ParseFloat(text, 64)
+
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+		}
+		return reflect.ValueOf(s), nil
+	case *int8:
 		var rd int8
 		if text != "" {
 			s, err := strconv.ParseInt(text, 10, 8)
@@ -185,7 +205,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = int8(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *int16, int16:
+	case int8:
+		var rd int8
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 8)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int8(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *int16:
 		var rd int16
 		if text != "" {
 			s, err := strconv.ParseInt(text, 10, 16)
@@ -195,7 +225,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = int16(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *int32, int32:
+	case int16:
+		var rd int16
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 16)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int16(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *int32:
 		var rd int32
 		if text != "" {
 			s, err := strconv.ParseInt(text, 10, 32)
@@ -205,7 +245,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = int32(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *int64, int64:
+	case int32:
+		var rd int32
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 32)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int32(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *int64:
 		var rd int64
 		if text != "" {
 			rd, err = strconv.ParseInt(text, 10, 64)
@@ -214,7 +264,16 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			}
 		}
 		return reflect.ValueOf(&rd), nil
-	case *int, int:
+	case int64:
+		var rd int64
+		if text != "" {
+			rd, err = strconv.ParseInt(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+		}
+		return reflect.ValueOf(rd), nil
+	case *int:
 		var rd int
 		if text != "" {
 			s, err := strconv.ParseInt(text, 10, 64)
@@ -224,7 +283,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = int(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *uint8, uint8:
+	case int:
+		var rd int
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *uint8:
 		var rd uint8
 		if text != "" {
 			s, err := strconv.ParseUint(text, 10, 8)
@@ -234,7 +303,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = uint8(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *uint16, uint16:
+	case uint8:
+		var rd uint8
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 8)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint8(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *uint16:
 		var rd uint16
 		if text != "" {
 			s, err := strconv.ParseUint(text, 10, 16)
@@ -244,7 +323,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = uint16(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *uint32, uint32:
+	case uint16:
+		var rd uint16
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 16)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint16(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *uint32:
 		var rd uint32
 		if text != "" {
 			s, err := strconv.ParseUint(text, 10, 32)
@@ -254,7 +343,17 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = uint32(s)
 		}
 		return reflect.ValueOf(&rd), nil
-	case *uint64, uint64:
+	case uint32:
+		var rd uint32
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 32)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint32(s)
+		}
+		return reflect.ValueOf(rd), nil
+	case *uint64:
 		var rd uint64
 		if text != "" {
 			rd, err = strconv.ParseUint(text, 10, 64)
@@ -263,7 +362,16 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			}
 		}
 		return reflect.ValueOf(&rd), nil
-	case *uint, uint:
+	case uint64:
+		var rd uint64
+		if text != "" {
+			rd, err = strconv.ParseUint(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+		}
+		return reflect.ValueOf(rd), nil
+	case *uint:
 		var rd uint
 		if text != "" {
 			s, err := strconv.ParseUint(text, 10, 64)
@@ -273,6 +381,16 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			rd = uint(s)
 		}
 		return reflect.ValueOf(&rd), nil
+	case uint:
+		var rd uint
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint(s)
+		}
+		return reflect.ValueOf(rd), nil
 	case bool:
 		var r bool
 		if text != "" {
@@ -285,7 +403,7 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 				r = true
 			}
 		}
-		return reflect.ValueOf(&r), nil
+		return reflect.ValueOf(r), nil
 	case *bool:
 		var r bool
 		if text != "" {
@@ -301,9 +419,10 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 		} else {
 			return reflect.ValueOf(nil), nil
 		}
-
-	case *string, string:
+	case *string:
 		return reflect.ValueOf(&text), nil
+	case string:
+		return reflect.ValueOf(text), nil
 	default:
 		return reflect.ValueOf(nil), errors.New("no type conversion support")
 	}

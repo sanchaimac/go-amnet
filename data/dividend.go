@@ -1,7 +1,7 @@
 package data
 
 // DividendNews ...
-type DividendNews struct {
+type DividendNewsData struct {
 	FundTaxID         string
 	FundCode          string
 	AnnounceDate      string
@@ -24,7 +24,7 @@ type DividendNews struct {
 }
 
 // Dividend ...
-type DividendUHID struct {
+type DividendUHIDConfirmation struct {
 	FundCode                  string
 	BookClosedDate            string
 	AMCCode                   string

@@ -1,7 +1,7 @@
 package data
 
-// NAVConfirmation ...
-type NAVConfirmation struct {
+// NAVData ...
+type NAVData struct {
 	AMCCode           string
 	FundCode          string
 	AUM               *float64
@@ -16,8 +16,8 @@ type NAVConfirmation struct {
 	TotalAUM          *float64
 }
 
-// UnitholderBalanceConfrimation ...
-type UnitholderBalanceConfrimation struct {
+// UnitholderBalanceData ...
+type UnitholderBalanceData struct {
 	AMCCode              string
 	AccountID            string
 	UnitholderID         string
@@ -34,8 +34,8 @@ type UnitholderBalanceConfrimation struct {
 	NAVDate              string
 }
 
-// UnitholderBalanceLTFConfirmation ...
-type UnitholderBalanceLTFConfirmation struct {
+// UnitholderBalanceLTFData ...
+type UnitholderBalanceLTFData struct {
 	AMCCode          string
 	Filler1          *string
 	UnitholderID     string
@@ -48,8 +48,8 @@ type UnitholderBalanceLTFConfirmation struct {
 	AllowSellFlag    string
 }
 
-// AllottedTransactionConfrimation ...
-type AllottedTransactionConfrimation struct {
+// AllottedTransactionData ...
+type AllottedTransactionData struct {
 	SAOrderReferenceNo                 *string
 	TransactionDateTime                string
 	AccountID                          string

@@ -14,13 +14,41 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/codefin-stack/go-fundconnext/models"
+	"github.com/codefin-stack/go-fundconnext/data"
+
+	"github.com/mitchellh/mapstructure"
 )
 
+type Download struct {
+	DataType data.FundConnextFileType
+	Header   DownloadHeader
+	Body     []interface{}
+}
+
+// DownloadHeader ...
+type DownloadHeader struct {
+	Date    string
+	SA      string
+	Records int
+	Version string
+}
+
+// New ...
+func (Download) New(fileName string) *Download {
+	return &Download{
+		DataType: data.FundConnextFileTypeMapping[fileName],
+	}
+}
+
+// Scan input will be the struct structure that you want output to be look like
+func (d *Download) Scan(requestedStruct interface{}) error {
+	return mapstructure.Decode(d.Body, &requestedStruct)
+}
+
 // Download FundConnext file (can save multiple paths)
-func (f *FundConnext) Download(asOfDate, fileName string, optionalSavePath ...string) (result models.Download, err error) {
+func (f *FundConnext) Download(asOfDate, fileType data.FundConnextFileType, optionalSavePath ...string) (result Download, err error) {
 	cfg := MakeAPICallerConfig(f)
-	url := fmt.Sprintf("/api/files/%s/%s.zip", asOfDate, fileName)
+	url := fmt.Sprintf("/api/files/%s/%s.zip", asOfDate, fileType.String())
 	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
 	if err != nil {
 		return result, err
@@ -41,13 +69,7 @@ func (f *FundConnext) Download(asOfDate, fileName string, optionalSavePath ...st
 	}
 
 	zipFile := zipReader.File[0]
-	// readFile, err := readZipFile(zipFile)
-	// if err != nil {
-	// 	return result, err
-	// }
-	// parseDownloadFile(zipFile, fileName)
-	// _ = unzippedFileBytes
-	return parseDownloadFile(zipFile, fileName)
+	return parseDownloadFile(zipFile, fileType)
 }
 
 // Private Function only accessible for download func
@@ -83,21 +105,10 @@ func saveFile(data []byte, fullPath []string) error {
 	return nil
 }
 
-func readZipFile(zf *zip.File) (io.ReadCloser, error) {
-	f, err := zf.Open()
-	if err != nil {
-		return nil, err
-	}
-
-	defer f.Close()
-
-	return f, nil
-}
-
-func parseDownloadFile(zipFile *zip.File, fileName string) (models.Download, error) {
+func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Download, error) {
 	f, err := zipFile.Open()
 	if err != nil {
-		return models.Download{}, err
+		return Download{}, err
 	}
 
 	defer f.Close()
@@ -114,31 +125,24 @@ func parseDownloadFile(zipFile *zip.File, fileName string) (models.Download, err
 
 	for scanner.Scan() {
 		lineData := strings.Split(scanner.Text(), "|")
-		downloadType := reflect.TypeOf(models.FundConnextFileType[fileName].ModelType())
+		downloadType := reflect.TypeOf(fileType.ModelType())
 		reflectVal := reflect.New(downloadType)
-
-		// Original Code
-		// for i := 0; i < reflectVal.Elem().NumField(); i++ {
-		// 	if reflectVal.Elem().Field(i).CanSet() {
-		// 		reflectVal.Elem().Field(i).Set(toReflectValue(lineData[i], reflectVal.Elem().Field(i).Interface()))
-		// 	}
-		// }
 
 		for key, value := range lineData {
 			if reflectVal.Elem().Field(key).CanSet() {
 				t, err := toReflectValue(value, reflectVal.Elem().Field(key).Interface())
 				if err != nil {
-					return models.Download{}, err
+					return Download{}, err
 				}
 				reflectVal.Elem().Field(key).Set(t)
 			}
 		}
 
-		DataStruct = append(DataStruct, reflectVal.Elem().Interface().(models.FundNAV))
+		DataStruct = append(DataStruct, reflectVal.Elem().Interface())
 	}
-	return models.Download{
-		DataType: models.FundConnextFileType[fileName],
-		Header: models.DownloadHeader{
+	return Download{
+		DataType: fileType,
+		Header: DownloadHeader{
 			Date:    Header[0],
 			SA:      Header[1],
 			Records: Records,
@@ -281,7 +285,7 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 				r = true
 			}
 		}
-		return reflect.ValueOf(r), nil
+		return reflect.ValueOf(&r), nil
 	case *bool:
 		var r bool
 		if text != "" {
@@ -293,7 +297,7 @@ func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 			default:
 				r = true
 			}
-			return reflect.ValueOf(r), nil
+			return reflect.ValueOf(&r), nil
 		} else {
 			return reflect.ValueOf(nil), nil
 		}

@@ -54,8 +54,8 @@ type FundProfileData struct {
 	LowBalCondition        *string
 }
 
-// SwitchingData ...
-type SwitchingData struct {
+// SwitchingMatrixData ...
+type SwitchingMatrixData struct {
 	FundCodeOut         string
 	FundCodeIn          string
 	SwitchSettlementDay int
@@ -87,4 +87,22 @@ type FeeData struct {
 	MinimumFee    *float64
 	Remark        *string
 	Maximum_Value *float64
+}
+
+// FundPerformanceData...
+type FundPerformanceData struct {
+	FundCode   string
+	PYTDReturn *float64
+	P3MReturn  *float64
+	P6MReturn  *float64
+	P1YReturn  *float64
+	P3YReturn  *float64
+	P5YReturn  *float64
+	P10YReturn *float64
+	PSIReturn  *float64
+	P1YSD      *float64
+	P3YSD      *float64
+	P5YSD      *float64
+	P10YSD     *float64
+	NAVDate    string
 }

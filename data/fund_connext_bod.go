@@ -28,8 +28,8 @@ type FundProfileData struct {
 	LowSellUnit            *float64
 	LowBalVal              *float64
 	LowBalUnit             *float64
-	SellSettlementDay      int
-	SwitchingSettlementDay *int
+	SellSettlementDay      uint64
+	SwitchingSettlementDay *uint64
 	SwitchOutFlag          string
 	SwitchInFlag           string
 	FundClass              *string
@@ -45,7 +45,7 @@ type FundProfileData struct {
 	EndIPODate             *string
 	PlainComplexFund       string
 	DerivativesFlag        string
-	LagAllocationDay       int
+	LagAllocationDay       uint64
 	SettlementHolidayFlag  string
 	HealthInsurrance       string
 	PreviousFundCode       *string

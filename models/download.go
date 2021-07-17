@@ -1,8 +1,6 @@
 package models
 
 import (
-	"reflect"
-
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -29,16 +27,6 @@ func (Download) New(fileName string) *Download {
 }
 
 // Scan input will be the struct structure that you want output to be look like
-func (d *Download) Scan(requestedStruct interface{}) (result []interface{}) {
-
-	if reflect.ValueOf(requestedStruct).Kind() == reflect.Ptr {
-		requestedStruct = reflect.ValueOf(requestedStruct).Elem().Interface()
-	}
-	for _, body := range d.Body {
-		mapstructure.Decode(body, &requestedStruct)
-		temp := requestedStruct
-
-		result = append(result, temp)
-	}
-	return result
+func (d *Download) Scan(requestedStruct interface{}) error {
+	return mapstructure.Decode(d.Body, &requestedStruct)
 }

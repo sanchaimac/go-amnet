@@ -16,7 +16,7 @@ type Download struct {
 // DownloadHeader ...
 type DownloadHeader struct {
 	Date    string
-	Bank    string
+	SA      string
 	Records int
 	Version string
 }

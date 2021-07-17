@@ -136,7 +136,7 @@ func parseDownloadFile(zipFile *zip.File, fileName string) models.Download {
 		DataType: models.FundConnextFileType[fileName],
 		Header: models.DownloadHeader{
 			Date:    Header[0],
-			Bank:    Header[1],
+			SA:      Header[1],
 			Records: Records,
 			Version: Header[3],
 		},
@@ -157,7 +157,55 @@ func toReflectValue(text string, value interface{}) reflect.Value {
 			}
 		}
 		return reflect.ValueOf(&s)
+	case float64:
+		var s float64
+		if text != "" {
+			s, err = strconv.ParseFloat(text, 64)
+
+			if err != nil {
+				panic("Fail to convert data")
+			}
+		}
+		return reflect.ValueOf(&s)
+	case *int64:
+		var rd int64
+		if text != "" {
+			rd, err = strconv.ParseInt(text, 10, 64)
+			if err != nil {
+				panic("Fail to convert data")
+			}
+		}
+		return reflect.ValueOf(&rd)
+	case int64:
+		var rd int64
+		if text != "" {
+			rd, err = strconv.ParseInt(text, 10, 64)
+			if err != nil {
+				panic("Fail to convert data")
+			}
+		}
+		return reflect.ValueOf(&rd)
+	case *uint64:
+		var rd uint64
+		if text != "" {
+			rd, err = strconv.ParseUint(text, 10, 64)
+			if err != nil {
+				panic("Fail to convert data")
+			}
+		}
+		return reflect.ValueOf(&rd)
+	case uint64:
+		var rd uint64
+		if text != "" {
+			rd, err = strconv.ParseUint(text, 10, 64)
+			if err != nil {
+				panic("Fail to convert data")
+			}
+		}
+		return reflect.ValueOf(&rd)
 	case *string:
+		return reflect.ValueOf(&text)
+	case string:
 		return reflect.ValueOf(&text)
 	default:
 		panic("match no type")

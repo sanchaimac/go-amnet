@@ -47,7 +47,7 @@ func (f *FundConnext) Download(asOfDate, fileName string, optionalSavePath ...st
 	// }
 	// parseDownloadFile(zipFile, fileName)
 	// _ = unzippedFileBytes
-	return parseDownloadFile(zipFile, fileName), nil
+	return parseDownloadFile(zipFile, fileName)
 }
 
 // Private Function only accessible for download func
@@ -60,13 +60,13 @@ func saveFile(data []byte, fullPath []string) error {
 
 	for _, path := range fullPath {
 		if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
-			log.Println(errors.New("Can't Save file"))
+			log.Println(errors.New("can't Save file"))
 			return err
 		}
 
 		out, err := os.Create(path)
 		if err != nil {
-			log.Println(errors.New("Can't Save file"))
+			log.Println(errors.New("can't Save file"))
 			return err
 		}
 
@@ -75,7 +75,7 @@ func saveFile(data []byte, fullPath []string) error {
 		// Write the body to file
 		_, err = io.Copy(out, bytes.NewBuffer(data))
 		if err != nil {
-			log.Println(errors.New("Can't Write file"))
+			log.Println(errors.New("can't Write file"))
 			return err
 		}
 	}
@@ -94,10 +94,10 @@ func readZipFile(zf *zip.File) (io.ReadCloser, error) {
 	return f, nil
 }
 
-func parseDownloadFile(zipFile *zip.File, fileName string) models.Download {
+func parseDownloadFile(zipFile *zip.File, fileName string) (models.Download, error) {
 	f, err := zipFile.Open()
 	if err != nil {
-		return models.Download{}
+		return models.Download{}, err
 	}
 
 	defer f.Close()
@@ -126,7 +126,11 @@ func parseDownloadFile(zipFile *zip.File, fileName string) models.Download {
 
 		for key, value := range lineData {
 			if reflectVal.Elem().Field(key).CanSet() {
-				reflectVal.Elem().Field(key).Set(toReflectValue(value, reflectVal.Elem().Field(key).Interface()))
+				t, err := toReflectValue(value, reflectVal.Elem().Field(key).Interface())
+				if err != nil {
+					return models.Download{}, err
+				}
+				reflectVal.Elem().Field(key).Set(t)
 			}
 		}
 
@@ -141,74 +145,162 @@ func parseDownloadFile(zipFile *zip.File, fileName string) models.Download {
 			Version: Header[3],
 		},
 		Body: DataStruct,
-	}
+	}, nil
 }
 
-func toReflectValue(text string, value interface{}) reflect.Value {
+func toReflectValue(text string, value interface{}) (reflect.Value, error) {
 	var err error
 	switch value.(type) {
-	case *float64:
+	case *float32, float32:
+		var r float32
+		if text != "" {
+			s, err := strconv.ParseFloat(text, 32)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			r = float32(s)
+		}
+		return reflect.ValueOf(&r), nil
+	case *float64, float64:
 		var s float64
 		if text != "" {
 			s, err = strconv.ParseFloat(text, 64)
 
 			if err != nil {
-				panic("Fail to convert data")
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
 			}
 		}
-		return reflect.ValueOf(&s)
-	case float64:
-		var s float64
+		return reflect.ValueOf(&s), nil
+	case *int8, int8:
+		var rd int8
 		if text != "" {
-			s, err = strconv.ParseFloat(text, 64)
+			s, err := strconv.ParseInt(text, 10, 8)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int8(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *int16, int16:
+		var rd int16
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 16)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int16(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *int32, int32:
+		var rd int32
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 32)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int32(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *int64, int64:
+		var rd int64
+		if text != "" {
+			rd, err = strconv.ParseInt(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+		}
+		return reflect.ValueOf(&rd), nil
+	case *int, int:
+		var rd int
+		if text != "" {
+			s, err := strconv.ParseInt(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = int(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *uint8, uint8:
+		var rd uint8
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 8)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint8(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *uint16, uint16:
+		var rd uint16
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 16)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint16(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *uint32, uint32:
+		var rd uint32
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 32)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint32(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case *uint64, uint64:
+		var rd uint64
+		if text != "" {
+			rd, err = strconv.ParseUint(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+		}
+		return reflect.ValueOf(&rd), nil
+	case *uint, uint:
+		var rd uint
+		if text != "" {
+			s, err := strconv.ParseUint(text, 10, 64)
+			if err != nil {
+				return reflect.ValueOf(nil), errors.New("type conversion failed")
+			}
+			rd = uint(s)
+		}
+		return reflect.ValueOf(&rd), nil
+	case bool:
+		var r bool
+		if text != "" {
+			switch text {
+			case "Y", "y", "1", "T", "t":
+				r = true
+			case "N", "n", "0", "F", "f":
+				r = false
+			default:
+				r = true
+			}
+		}
+		return reflect.ValueOf(r), nil
+	case *bool:
+		var r bool
+		if text != "" {
+			switch text {
+			case "Y", "y", "1", "T", "t":
+				r = true
+			case "N", "n", "0", "F", "f":
+				r = false
+			default:
+				r = true
+			}
+			return reflect.ValueOf(r), nil
+		} else {
+			return reflect.ValueOf(nil), nil
+		}
 
-			if err != nil {
-				panic("Fail to convert data")
-			}
-		}
-		return reflect.ValueOf(&s)
-	case *int64:
-		var rd int64
-		if text != "" {
-			rd, err = strconv.ParseInt(text, 10, 64)
-			if err != nil {
-				panic("Fail to convert data")
-			}
-		}
-		return reflect.ValueOf(&rd)
-	case int64:
-		var rd int64
-		if text != "" {
-			rd, err = strconv.ParseInt(text, 10, 64)
-			if err != nil {
-				panic("Fail to convert data")
-			}
-		}
-		return reflect.ValueOf(&rd)
-	case *uint64:
-		var rd uint64
-		if text != "" {
-			rd, err = strconv.ParseUint(text, 10, 64)
-			if err != nil {
-				panic("Fail to convert data")
-			}
-		}
-		return reflect.ValueOf(&rd)
-	case uint64:
-		var rd uint64
-		if text != "" {
-			rd, err = strconv.ParseUint(text, 10, 64)
-			if err != nil {
-				panic("Fail to convert data")
-			}
-		}
-		return reflect.ValueOf(&rd)
-	case *string:
-		return reflect.ValueOf(&text)
-	case string:
-		return reflect.ValueOf(&text)
+	case *string, string:
+		return reflect.ValueOf(&text), nil
 	default:
-		panic("match no type")
+		return reflect.ValueOf(nil), errors.New("no type conversion support")
 	}
-
 }

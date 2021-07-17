@@ -46,7 +46,7 @@ func (d *Download) Scan(requestedStruct interface{}) error {
 }
 
 // Download FundConnext file (can save multiple paths)
-func (f *FundConnext) Download(asOfDate, fileType data.FundConnextFileType, optionalSavePath ...string) (result Download, err error) {
+func (f *FundConnext) Download(asOfDate string, fileType data.FundConnextFileType, optionalSavePath ...string) (result Download, err error) {
 	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/files/%s/%s.zip", asOfDate, fileType.String())
 	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)

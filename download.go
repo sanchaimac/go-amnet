@@ -140,13 +140,18 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 
 		DataStruct = append(DataStruct, reflectVal.Elem().Interface())
 	}
+
+	var version string
+	if len(Header) >= 4 {
+		version = Header[3]
+	}
 	return Download{
 		DataType: fileType,
 		Header: DownloadHeader{
 			Date:    Header[0],
 			SA:      Header[1],
 			Records: Records,
-			Version: Header[3],
+			Version: version,
 		},
 		Body: DataStruct,
 	}, nil

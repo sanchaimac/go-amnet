@@ -20,9 +20,11 @@ import (
 )
 
 type Download struct {
-	DataType data.FundConnextFileType
-	Header   DownloadHeader
-	Body     []interface{}
+	DataType    data.FundConnextFileType
+	Header      DownloadHeader
+	Body        []interface{}
+	HeaderBytes []byte
+	BodyBytes   []byte
 }
 
 // DownloadHeader ...
@@ -118,13 +120,17 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 
 	// Get File Header
 	scanner.Scan()
-	Header := strings.Split(scanner.Text(), "|")
-
+	headerString := scanner.Text()
+	Header := strings.Split(headerString, "|")
+	headerBytes := []byte(headerString)
 	var Records int = StringToInt(Header[2])
 	var DataStruct []interface{}
+	var bodyBytes []byte
 
 	for scanner.Scan() {
-		lineData := strings.Split(scanner.Text(), "|")
+		lineString := scanner.Text()
+		bodyBytes = append(bodyBytes, []byte(lineString)...)
+		lineData := strings.Split(lineString, "|")
 		downloadType := reflect.TypeOf(fileType.ModelType())
 		reflectVal := reflect.New(downloadType)
 
@@ -153,7 +159,9 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 			Records: Records,
 			Version: version,
 		},
-		Body: DataStruct,
+		Body:        DataStruct,
+		HeaderBytes: headerBytes,
+		BodyBytes:   bodyBytes,
 	}, nil
 }
 

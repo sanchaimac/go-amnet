@@ -59,6 +59,31 @@ func (f FundConnextFileType) String() string {
 	}[f]
 }
 
+type HeaderScheme struct {
+	AsOfDate    int
+	SACode      int
+	TotalRecord int
+	Version     int
+}
+
+func (f FundConnextFileType) Header() HeaderScheme {
+	return [...]HeaderScheme{
+		{0, 1, 2, -1},  // FundMapping
+		{0, -1, 1, 2},  // FundProfile
+		{0, -1, 1, 2},  // SwitchingMatrix
+		{0, -1, 1, -1}, // FundHoliday
+		{0, -1, 1, 2},  // TradeCalendar
+		{0, -1, 1, 2},  // Fee
+		{0, -1, 1, -1}, // FundPerformance
+		{0, 1, 2, 3},   // Nav
+		{0, 1, 2, -1},  // UnitholderBalance
+		{0, 1, 2, 3},   // LtfBalance
+		{0, 1, 2, 3},   // AllottedTransaction
+		{0, 1, 2, 3},   // DividendNews
+		{0, 1, 2, 3},   // DividendTransactions
+	}[f]
+}
+
 // FundConnextFileType mapping filename and type
 var FundConnextFileTypeMapping = map[string]FundConnextFileType{
 	"FundMapping":          FundMapping,

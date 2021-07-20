@@ -136,8 +136,7 @@ func renderPage3Signature(pdf *gofpdf.Fpdf, form FATCAForm) {
 	pdf.Text(410, 693, form.OfficerSignedDate)
 }
 
-func (f *FundConnext) GenerateFATCAForm(form FATCAForm, dest string, opt *FormOption) error {
-	pdfPath := "../templates/forms/20141219_FATCA_Individual.pdf"
+func (f *FundConnext) GenerateFATCAForm(pdfPath string, form FATCAForm, dest string, opt *FormOption) error {
 	pdf := setupPDF()
 
 	pdf.AddPage()

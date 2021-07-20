@@ -354,8 +354,7 @@ func renderBusinessType(pdf *gofpdf.Fpdf, customer IndividualCustomerDocument) {
 	}
 }
 
-func (f *FundConnext) GenerateSingleForm(customer IndividualCustomerDocument, account IndividualAccountDocument, formMeta FormMeta, dest string, opt *FormOption) error {
-	pdfPath := "../templates/forms/20210416_form_Individual.pdf"
+func (f *FundConnext) GenerateSingleForm(pdfPath string, customer IndividualCustomerDocument, account IndividualAccountDocument, formMeta FormMeta, dest string, opt *FormOption) error {
 	pdf := setupPDF()
 	pdf.AddPage()
 	importPDF(pdf, pdfPath, 4)

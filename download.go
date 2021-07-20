@@ -117,13 +117,11 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 
 	scanner := bufio.NewScanner(f)
 	scanner.Split(bufio.ScanLines)
-
 	// Get File Header
 	scanner.Scan()
 	headerString := scanner.Text()
 	Header := strings.Split(headerString, "|")
 	headerBytes := []byte(headerString)
-	var Records int = StringToInt(Header[2])
 	var DataStruct []interface{}
 	var bodyBytes []byte
 
@@ -146,6 +144,21 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 
 		DataStruct = append(DataStruct, reflectVal.Elem().Interface())
 	}
+	var asOfDate string
+	p0 := fileType.Header().AsOfDate
+	if p0 >= 0 {
+		asOfDate = Header[p0]
+	}
+	var saCode string
+	p1 := fileType.Header().SACode
+	if p1 >= 0 {
+		saCode = Header[p1]
+	}
+	var records int
+	p2 := fileType.Header().TotalRecord
+	if p2 >= 0 {
+		records = StringToInt(Header[p2])
+	}
 
 	var version string
 	if len(Header) >= 4 {
@@ -154,9 +167,9 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 	return Download{
 		DataType: fileType,
 		Header: DownloadHeader{
-			Date:    Header[0],
-			SA:      Header[1],
-			Records: Records,
+			Date:    asOfDate,
+			SA:      saCode,
+			Records: records,
 			Version: version,
 		},
 		Body:        DataStruct,

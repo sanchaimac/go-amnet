@@ -20,6 +20,9 @@ const (
 	AllottedTransaction
 	DividendNews
 	DividendTransaction
+	AccountProfile
+	UnitholderMapping
+	BankAccountUnitholder
 )
 
 // ModelType get struct type
@@ -38,6 +41,9 @@ func (f FundConnextFileType) ModelType() interface{} {
 		AllottedTransactionData{},
 		DividendNewsData{},
 		DividendUHIDConfirmation{},
+		AccountProfileData{},
+		UnitholderMappingData{},
+		BankAccountUnitholderData{},
 	}[f]
 }
 
@@ -56,6 +62,9 @@ func (f FundConnextFileType) String() string {
 		"AllottedTransactions",
 		"DividendNews",
 		"DividendTransactions",
+		"AccountProfile",
+		"UnitholderMapping",
+		"BankAccountUnitholder",
 	}[f]
 }
 
@@ -81,22 +90,28 @@ func (f FundConnextFileType) Header() HeaderScheme {
 		{0, 1, 2, 3},   // AllottedTransaction
 		{0, 1, 2, 3},   // DividendNews
 		{0, 1, 2, 3},   // DividendTransactions
+		{0, 1, 2, -1},  // AccountProfile
+		{0, 1, 2, -1},  // UnitholderMapping
+		{0, 1, 2, -1},  // BankAccountUnitholder
 	}[f]
 }
 
 // FundConnextFileType mapping filename and type
 var FundConnextFileTypeMapping = map[string]FundConnextFileType{
-	"FundMapping":          FundMapping,
-	"FundProfile":          FundProfile,
-	"SwitchingMatrix":      SwitchingMatrix,
-	"FundHoliday":          FundHoliday,
-	"TradeCalendar":        TradeCalendar,
-	"Fee":                  Fee,
-	"FundPerformance":      FundPerformance,
-	"Nav":                  NAV,
-	"UnitholderBalance":    UnitholderBalance,
-	"LtfBalance":           UnitholderBalanceLTF,
-	"AllottedTransactions": AllottedTransaction,
-	"DividendNews":         DividendNews,
-	"DividendTransactions": DividendTransaction,
+	"FundMapping":           FundMapping,
+	"FundProfile":           FundProfile,
+	"SwitchingMatrix":       SwitchingMatrix,
+	"FundHoliday":           FundHoliday,
+	"TradeCalendar":         TradeCalendar,
+	"Fee":                   Fee,
+	"FundPerformance":       FundPerformance,
+	"Nav":                   NAV,
+	"UnitholderBalance":     UnitholderBalance,
+	"LtfBalance":            UnitholderBalanceLTF,
+	"AllottedTransactions":  AllottedTransaction,
+	"DividendNews":          DividendNews,
+	"DividendTransactions":  DividendTransaction,
+	"AccountProfile":        AccountProfile,
+	"UnitholderMapping":     UnitholderMapping,
+	"BankAccountUnitholder": BankAccountUnitholder,
 }

@@ -106,3 +106,77 @@ type FundPerformanceData struct {
 	P10YSD     *float64
 	NAVDate    string
 }
+
+// AccountProfileData ...
+type AccountProfileData struct {
+	SACode                              string
+	AccountID                           string
+	AccountOpenDate                     string
+	ICLicense                           string
+	BankCodeSubscription1               *string
+	BankAccountSubscription1            *string
+	DefaultFlagBankAccountSubscription1 *string
+	BankCodeSubscription2               *string
+	BankAccountSubscription2            *string
+	DefaultFlagBankAccountSubscription2 *string
+	BankCodeSubscription3               *string
+	BankAccountSubscription3            *string
+	DefaultFlagBankAccountSubscription3 *string
+	BankCodeSubscription4               *string
+	BankAccountSubscription4            *string
+	DefaultFlagBankAccountSubscription4 *string
+	BankCodeSubscription5               *string
+	BankAccountSubscription5            *string
+	DefaultFlagBankAccountSubscription5 *string
+	BankCodeRedemption1                 *string
+	BankAccountRedemption1              *string
+	DefaultFlagBankAccountRedemption1   *string
+	BankCodeRedemption2                 *string
+	BankAccountRedemption2              *string
+	DefaultFlagBankAccountRedemption2   *string
+	BankCodeRedemption3                 *string
+	BankAccountRedemption3              *string
+	DefaultFlagBankAccountRedemption3   *string
+	BankCodeRedemption4                 *string
+	BankAccountRedemption4              *string
+	DefaultFlagBankAccountRedemption4   *string
+	BankCodeRedemption5                 *string
+	BankAccountRedemption5              *string
+	DefaultFlagBankAccountRedemption5   *string
+	Gender                              *string
+	Title                               *string
+	FirstNameTH                         string
+	LastNameTH                          *string
+	FirstNameEN                         string
+	LastNameEN                          *string
+	SuitabilityTestDate                 string
+	RiskProfileLevel                    string
+	FXRiskFlag                          string
+	FATCATestDate                       string
+	FATCAFlag                           string
+	VulnerableFlag                      *string
+	OpenFundConnextFormFlag             *string
+	OpenOmnibusFormFlag                 *string
+	AccountStatus                       string
+	ProcessStatus                       string
+	LastUpdate                          string
+	InvestorType                        string
+}
+
+// UnitholderMappingData ...
+type UnitholderMappingData struct {
+	AccountID    string
+	AMCCode      string
+	UnitholderID string
+	AccountType  string
+}
+
+// BankAccountUnitholderData ...
+type BankAccountUnitholderData struct {
+	AccountID         string
+	AMCCode           string
+	UnitholderID      string
+	TransactionType   string
+	BankCode          string
+	BankAccountNumber string
+}

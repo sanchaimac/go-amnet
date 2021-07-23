@@ -53,7 +53,7 @@ func (f FundConnextFileType) String() string {
 		"Nav",
 		"UnitholderBalance",
 		"LtfBalance",
-		"AllottedTransaction",
+		"AllottedTransactions",
 		"DividendNews",
 		"DividendTransactions",
 	}[f]
@@ -96,7 +96,7 @@ var FundConnextFileTypeMapping = map[string]FundConnextFileType{
 	"Nav":                  NAV,
 	"UnitholderBalance":    UnitholderBalance,
 	"LtfBalance":           UnitholderBalanceLTF,
-	"AllottedTransaction":  AllottedTransaction,
+	"AllottedTransactions": AllottedTransaction,
 	"DividendNews":         DividendNews,
 	"DividendTransactions": DividendTransaction,
 }

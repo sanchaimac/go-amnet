@@ -107,4 +107,7 @@ type AllottedTransactionData struct {
 	NAVDate                            *string
 	CollateralAccount                  *string
 	CreditCardIssuer                   *string
+	Filler4                            *string
+	Filler5                            *string
+	Filler6                            *string
 }

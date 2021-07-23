@@ -7,6 +7,7 @@ import (
 	"io"
 )
 
+// Verified V4
 type SpouseDocument struct {
 	THFirstName *string `json:"thFirstName"`
 	THLastName  *string `json:"thLastName"`
@@ -14,6 +15,7 @@ type SpouseDocument struct {
 	ENLastName  *string `json:"enLastName"`
 }
 
+// Verified V4
 type SuitabilityForm struct {
 	SuitNo1  *string `json:"suitNo1"`
 	SuitNo2  *string `json:"suitNo2"`
@@ -29,6 +31,7 @@ type SuitabilityForm struct {
 	SuitNo12 *string `json:"suitNo12"`
 }
 
+// Verified V4
 type Address struct {
 	No          string  `json:"no"`
 	Floor       *string `json:"floor"`

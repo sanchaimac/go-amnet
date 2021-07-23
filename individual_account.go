@@ -7,6 +7,7 @@ import (
 	"io"
 )
 
+// Verified V4
 type BankAccount struct {
 	BankCode         string  `json:"bankCode"`
 	BankBranchCode   *string `json:"bankBranchCode"`

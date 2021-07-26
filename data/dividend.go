@@ -21,6 +21,12 @@ type DividendNewsData struct {
 	AcctPeriodTo      *string
 	CancelDate        *string
 	UpdatedDate       *string
+	Filler1           *string
+	Filler2           *string
+	Filler3           *string
+	Filler4           *string
+	Filler5           *string
+	Filler6           *string
 }
 
 // Dividend ...
@@ -44,4 +50,10 @@ type DividendUHIDConfirmation struct {
 	FundTaxID                 string
 	PaymentDate               string
 	DividendRate              float64
+	Filler1                   *string
+	Filler2                   *string
+	Filler3                   *string
+	Filler4                   *string
+	Filler5                   *string
+	Filler6                   *string
 }

@@ -13,17 +13,17 @@ type OrderInquiry struct {
 	UnitholderID           string  `json:"unitholderId"`
 	FundCode               string  `json:"fundCode"`
 	Unit                   *string `json:"unit"`
-	Amount                 float32 `json:"amount"`
+	Amount                 float64 `json:"amount"`
 	Status                 string  `json:"status"`
 	TransactionDateTime    string  `json:"transactionDateTime"`
 	TransactionLastUpdated string  `json:"transactionLastUpdated"`
 	EffectiveDate          string  `json:"effectiveDate"`
 	SettlementDate         string  `json:"settlementDate"`
 	AMCOrderReferenceNo    *string `json:"amcOrderReferenceNo"`
-	AllottedUnit           float32 `json:"allottedUnit"`
-	AllottedAmount         float32 `json:"allottedAmount"`
-	AllottedNAV            float32 `json:"allottedNAV"`
-	Fee                    float32 `json:"fee"`
+	AllottedUnit           float64 `json:"allottedUnit"`
+	AllottedAmount         float64 `json:"allottedAmount"`
+	AllottedNAV            float64 `json:"allottedNAV"`
+	Fee                    float64 `json:"fee"`
 	SellAllUnitFlag        *string `json:"sellAllUnitFlag"`
 	AllotmentDate          *string `json:"allotmentDate"`
 	PaymentType            *string `json:"paymentType"`

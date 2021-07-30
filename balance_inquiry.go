@@ -8,14 +8,14 @@ import (
 type BalanceInquiry struct {
 	UnitholderId  string  `json:"unitholderId"`
 	FundCode      string  `json:"fundCode"`
-	Unit          float32 `json:"unit"`
-	Amount        float32 `json:"amount"`
-	RemainUnit    float32 `json:"remainUnit"`
-	RemainAmount  float32 `json:"remainAmount"`
-	PendingAmount float32 `json:"pendingAmount"`
-	PendingUnit   float32 `json:"pendingUnit"`
-	AVGCost       float32 `json:"avgCost"`
-	NAV           float32 `json:"nav"`
+	Unit          float64 `json:"unit"`
+	Amount        float64 `json:"amount"`
+	RemainUnit    float64 `json:"remainUnit"`
+	RemainAmount  float64 `json:"remainAmount"`
+	PendingAmount float64 `json:"pendingAmount"`
+	PendingUnit   float64 `json:"pendingUnit"`
+	AVGCost       float64 `json:"avgCost"`
+	NAV           float64 `json:"nav"`
 	NAVDate       string  `json:"navDate"`
 }
 

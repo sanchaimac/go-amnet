@@ -14,7 +14,7 @@ type SubscriptionOrder struct {
 	OverrideRiskProfile   string  `json:"overrideRiskProfile"`
 	OverrideFxRisk        string  `json:"overrideFxRisk"`
 	FundCode              string  `json:"fundCode"`
-	Amount                float32 `json:"amount"`
+	Amount                float64 `json:"amount"`
 	EffectiveDate         string  `json:"effectiveDate"`
 	PaymentType           string  `json:"paymentType"`
 	CreditCardNo          *string `json:"creditCardNo"`
@@ -48,7 +48,7 @@ type BasketOrder struct {
 	OverrideRiskProfile   string  `json:"overrideRiskProfile"`
 	OverrideFxRisk        string  `json:"overrideFxRisk"`
 	FundCode              string  `json:"fundCode"`
-	Amount                float32 `json:"amount"`
+	Amount                float64 `json:"amount"`
 	AutoRedeemFundCode    *string `json:"autoRedeemFundCode"`
 	LTFCondition          *string `json:"ltfCondition"`
 	SettlementBankCode    *string `json:"settlementBankCode"`

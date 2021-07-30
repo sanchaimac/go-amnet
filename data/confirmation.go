@@ -46,6 +46,11 @@ type UnitholderBalanceLTFData struct {
 	InvestmentAmount float64
 	UnitInvest       float64
 	AllowSellFlag    string
+	Filler3          *string
+	Filler4          *string
+	Filler5          *string
+	Filler6          *string
+	Filler7          *string
 }
 
 // AllottedTransactionData ...

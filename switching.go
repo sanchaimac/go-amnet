@@ -24,7 +24,7 @@ type SwitchingOrder struct {
 	BranchNo            *string  `json:"branchNo"`
 	ForceEntry          string   `json:"forceEntry"`
 	SellAllUnitFlag     *string  `json:"sellAllUnitFlag"`
-	AutoRedeemFundCode  string   `json:"autoRedeemFundCode"`
+	AutoRedeemFundCode  *string  `json:"autoRedeemFundCode"`
 	Status              *string  `json:"status"`
 }
 

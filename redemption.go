@@ -1,6 +1,9 @@
 package fundconnext
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type RedemptionOrder struct {
 	SaOrderReferenceNo    string   `json:"saOrderReferenceNo"`
@@ -55,10 +58,44 @@ func (f *FundConnext) CreateRedemption(redemption RedemptionOrder) (*RedemptionO
 	return results, nil
 }
 
-func (f *FundConnext) CancelRedemption() error {
-	return nil
+func (f *FundConnext) CancelRedemption(transactionId, force string) (*TransactionIDResponse, error) {
+	cfg := MakeAPICallerConfig(f)
+	url := fmt.Sprintf("/api/redemptions/%s", transactionId)
+	body, err := json.Marshal(map[string]string{
+		"force": force,
+	})
+	if err != nil {
+		return nil, err
+	}
+	resp, err := CallFCAPI(f.token, "DELETE", url, body, cfg)
+	if err != nil {
+		return nil, err
+	}
+	var results *TransactionIDResponse
+	err = json.Unmarshal(resp, &results)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
 }
 
-func (f *FundConnext) ApproveRedemption() error {
-	return nil
+func (f *FundConnext) ApproveRedemption(transactionId, status string) (*TransactionIDResponse, error) {
+	cfg := MakeAPICallerConfig(f)
+	url := fmt.Sprintf("/api/redemptions/%s", transactionId)
+	body, err := json.Marshal(map[string]string{
+		"status": status,
+	})
+	if err != nil {
+		return nil, err
+	}
+	resp, err := CallFCAPI(f.token, "PATCH", url, body, cfg)
+	if err != nil {
+		return nil, err
+	}
+	var results *TransactionIDResponse
+	err = json.Unmarshal(resp, &results)
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
 }

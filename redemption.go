@@ -23,12 +23,12 @@ type RedemptionOrder struct {
 	ICLicense             string   `json:"icLicense"`
 	BranchNo              *string  `json:"branchNo"`
 	ForceEntry            string   `json:"forceEntry"`
-	ReasonToSellLtfRmf    string   `json:"reasonToSellLtfRmf"`
-	RmfCapGainWhtChoice   string   `json:"rmfCapGainWhtChoice"`
-	RmfCapAmtRedeemChoice string   `json:"RmfCapAmtRedeemChoice"`
-	SellAllUnitFlag       string   `json:"sellAllUnitFlag"`
-	SettlementBankCode    string   `json:"settlementBankCode"`
-	SettlementBankAccount string   `json:"settlementBankAccount"`
+	ReasonToSellLtfRmf    *string  `json:"reasonToSellLtfRmf"`
+	RmfCapGainWhtChoice   *string  `json:"rmfCapGainWhtChoice"`
+	RmfCapAmtRedeemChoice *string  `json:"RmfCapAmtRedeemChoice"`
+	SellAllUnitFlag       *string  `json:"sellAllUnitFlag"`
+	SettlementBankCode    *string  `json:"settlementBankCode"`
+	SettlementBankAccount *string  `json:"settlementBankAccount"`
 	Status                *string  `json:"status"`
 	CollateralAccount     *string  `json:"collateralAccount"`
 }

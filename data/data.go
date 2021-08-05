@@ -87,6 +87,17 @@ type FeeData struct {
 	MinimumFee    *float64
 	Remark        *string
 	Maximum_Value *float64
+	Filler1       *string
+	Filler2       *string
+	Filler3       *string
+	Filler4       *string
+	Filler5       *string
+	Filler6       *string
+	Filler7       *string
+	Filler8       *string
+	Filler9       *string
+	Filler10      *string
+	Filler11      *string
 }
 
 // FundPerformanceData...

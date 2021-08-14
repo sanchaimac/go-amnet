@@ -116,10 +116,6 @@ func CallFCAPI(token, method, fp string, body []byte, cfg *APICallerConfig) ([]b
 		return nil, err
 	}
 
-	// log.Println("resp.StatusCode ::", resp.StatusCode)
-	// log.Println("resp.Body ::", string(respBody))
-	// log.Println("resp.Header ::", resp.Header)
-
 	if resp.StatusCode != 200 {
 		var errMsg FCError
 		json.Unmarshal(respBody, &errMsg)

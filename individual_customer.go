@@ -1,13 +1,12 @@
 package fundconnext
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 )
 
-// Verified V4
+// SpouseDocument Verified V4
 type SpouseDocument struct {
 	THFirstName *string `json:"thFirstName"`
 	THLastName  *string `json:"thLastName"`
@@ -15,7 +14,7 @@ type SpouseDocument struct {
 	ENLastName  *string `json:"enLastName"`
 }
 
-// Verified V4
+// SuitabilityForm Verified V4
 type SuitabilityForm struct {
 	SuitNo1  *string `json:"suitNo1"`
 	SuitNo2  *string `json:"suitNo2"`
@@ -31,7 +30,7 @@ type SuitabilityForm struct {
 	SuitNo12 *string `json:"suitNo12"`
 }
 
-// Verified V4
+// Address Verified V4
 type Address struct {
 	No          string  `json:"no"`
 	Floor       *string `json:"floor"`
@@ -128,26 +127,17 @@ type IndividualCustomerFile struct {
 }
 
 func (f *FundConnext) CreateIndividualCustomer(identificationDoc IndividualCustomerDocument) error {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/customer/individual/v4"
-
 	body, err := json.Marshal(identificationDoc)
 
 	if err != nil {
-		fmt.Println("[Func CreateIndividualCustomer] Error json.Marshal ::", err)
+		f.cfg.Logger.Fatalln("[Func CreateIndividualCustomer] Error json.Marshal ::", err)
 		return err
 	}
 
-	header := Headers{
-		ContentType: "application/json",
-		XAuthToken:  f.token,
-	}
-
-	//_, err = CallFCAPI(f.token, "POST", url, body, cfg)
-	_, _, err = CallToFundConnext(cfg, "POST", url, header, bytes.NewBuffer(body))
-
+	_, err = f.APICall("POST", url, body)
 	if err != nil {
-		fmt.Println("[Func CreateIndividualCustomer] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Fatalln("[Func CreateIndividualCustomer] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -155,26 +145,17 @@ func (f *FundConnext) CreateIndividualCustomer(identificationDoc IndividualCusto
 }
 
 func (f *FundConnext) UpdateIndividualCustomer(identificationDoc IndividualCustomerDocument) error {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/customer/individual/v4"
-
 	body, err := json.Marshal(identificationDoc)
 
 	if err != nil {
-		fmt.Println("[Func UpdateIndividualCustomer] Error json.Marshal ::", err)
+		f.cfg.Logger.Fatalln("[Func UpdateIndividualCustomer] Error json.Marshal ::", err)
 		return err
 	}
 
-	header := Headers{
-		ContentType: "application/json",
-		XAuthToken:  f.token,
-	}
-
-	// _, err = CallFCAPI(f.token, "PUT", url, body, cfg)
-	_, _, err = CallToFundConnext(cfg, "PUT", url, header, bytes.NewBuffer(body))
-
+	_, err = f.APICall("PUT", url, body)
 	if err != nil {
-		fmt.Println("[Func UpdateIndividualCustomer] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Fatalln("[Func UpdateIndividualCustomer] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -182,25 +163,15 @@ func (f *FundConnext) UpdateIndividualCustomer(identificationDoc IndividualCusto
 }
 
 func (f *FundConnext) UpdatePartialIndividualCustomer(partialIndividualCustomerDocument PartialIndividualCustomerDocument) error {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/customer/individual"
-
 	body, err := json.Marshal(partialIndividualCustomerDocument)
-
 	if err != nil {
-		fmt.Println("[Func UpdatePartialIndividualCustomer] Error json.Marshal ::", err)
+		f.cfg.Logger.Fatalln("[Func UpdatePartialIndividualCustomer] Error json.Marshal ::", err)
 		return err
 	}
-
-	header := Headers{
-		ContentType: "application/json",
-		XAuthToken:  f.token,
-	}
-
-	// _, err = CallFCAPI(f.token, "PATCH", url, body, cfg)
-	_, _, err = CallToFundConnext(cfg, "PATCH", url, header, bytes.NewBuffer(body))
-
+	_, err = f.APICall("PATCH", url, body)
 	if err != nil {
+		f.cfg.Logger.Fatalln("[Func UpdatePartialIndividualCustomer] Error CallToFundConnext ::", err)
 		return err
 	}
 	return nil
@@ -221,20 +192,11 @@ func (f *FundConnext) UpdatePartialIndividualCustomer(partialIndividualCustomerD
 // 	return nil
 // }
 
-func (f *FundConnext) UploadIndividualCustomerFile(fileType string, header Headers, body io.Reader) error {
-	var err error
-
-	cfg := MakeAPICallerConfig(f)
+func (f *FundConnext) UploadIndividualCustomerFile(fileType string, body io.Reader) error {
 	url := fmt.Sprintf("/api/customer/individual/%s/upload", fileType)
-	header.XAuthToken = f.token
-	// body, err := json.Marshal(individualCustomerFile)  /api/customer/individual/:fileType/upload
-
-	// _, err = CallFCAPIV2(f.token, "POST", url, body, cfg, contentType)
-	_, _, err = CallToFundConnext(cfg, "POST", url, header, body)
-
+	_, err := f.APICallFormData("POST", url, body)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

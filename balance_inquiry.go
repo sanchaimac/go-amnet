@@ -24,9 +24,9 @@ type BalanceInquiryResults struct {
 }
 
 func (f *FundConnext) BalanceInquiry(accountNo string) (*BalanceInquiryResults, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/account/balances?accountNo=%s", accountNo)
-	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	// out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
 		return nil, err
 	}

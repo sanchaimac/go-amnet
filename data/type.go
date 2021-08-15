@@ -1,12 +1,12 @@
 package data
 
-// FundConnextType Enum
+// FundConnextFileType Enum
 type FundConnextFileType uint32
 
 // Enum of data Type (only for fund connect type)
 // Ex. Nav, FundProfile, AllottedTransactions
 const (
-	// GenerateFile state
+	// FundMapping state
 	FundMapping FundConnextFileType = iota
 	FundProfile
 	SwitchingMatrix
@@ -96,7 +96,7 @@ func (f FundConnextFileType) Header() HeaderScheme {
 	}[f]
 }
 
-// FundConnextFileType mapping filename and type
+// FundConnextFileTypeMapping mapping filename and type
 var FundConnextFileTypeMapping = map[string]FundConnextFileType{
 	"FundMapping":           FundMapping,
 	"FundProfile":           FundProfile,

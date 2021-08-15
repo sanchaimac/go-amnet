@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"reflect"
@@ -16,21 +16,6 @@ import (
 	"time"
 )
 
-var urls map[string]string = map[string]string{
-	"demo":       "https://demo.fundconnext.com",
-	"stage":      "https://stage.fundconnext.com",
-	"production": "https://www.fundconnext.com",
-}
-
-type APICallerConfig struct {
-	Timeout time.Duration
-}
-
-//Headers ...
-type Headers struct {
-	ContentType string
-	XAuthToken  string
-}
 
 func ScanRowToStruct(data string, r interface{}) {
 	elem := reflect.ValueOf(r).Elem()
@@ -48,65 +33,88 @@ func ScanRowToStruct(data string, r interface{}) {
 	}
 }
 
-//CallToFundConnext ...
-func CallToFundConnext(cfg *APICallerConfig, method, uri string, header Headers, body io.Reader) (int, []byte, error) {
-	client := http.Client{
-		Timeout: cfg.Timeout,
+////CallToFundConnext ...
+//func CallToFundConnext(cfg *APICallerConfig, method, uri string, header Headers, body io.Reader) (int, []byte, error) {
+//	client := http.Client{}
+//	if cfg.Timeout == nil {
+//		client.Timeout = time.Second * 10
+//	} else {
+//		client.Timeout = *cfg.Timeout
+//	}
+//
+//	req, err := http.NewRequest(method, (urls["stage"] + uri), body)
+//
+//	if err != nil {
+//		return 500, nil, err
+//	}
+//
+//	if method == "GET" || method == "POST" || method == "PUT" || method == "PATCH" || method == "DELETE" {
+//		req.Header.Add("Content-Type", header.ContentType)
+//	}
+//
+//	req.Header.Add("X-Auth-Token", header.XAuthToken)
+//
+//	resp, err := client.Do(req)
+//
+//	if err != nil {
+//		return 500, nil, err
+//	}
+//
+//	defer resp.Body.Close()
+//
+//	respBody, err := ioutil.ReadAll(resp.Body)
+//
+//	if err != nil {
+//		return 500, nil, err
+//	}
+//
+//	if resp.StatusCode != 200 {
+//		var errMsg FCError
+//		json.Unmarshal(respBody, &errMsg)
+//
+//		return resp.StatusCode, nil, &errMsg
+//	}
+//
+//	return resp.StatusCode, respBody, nil
+//}
+
+func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerConfig) ([]byte, error) {
+	client := http.Client{}
+	if cfg.Timeout == nil {
+		client.Timeout = time.Second * 10
+	} else {
+		client.Timeout = *cfg.Timeout
+	}
+	url := fmt.Sprintf("%s%s",env,fp)
+	var reqReader io.Reader
+	switch body.(type) {
+	case []byte:
+		reqReader = bytes.NewBuffer(body.([]byte))
+	case io.Reader:
+		reqReader = body.(io.Reader)
+	case nil:
+		reqReader = nil
+	default:
+		return nil, errors.New("invalid body type")
 	}
 
-	req, err := http.NewRequest(method, (urls["stage"] + uri), body)
-
+	req, err := http.NewRequest(method, url, reqReader)
 	if err != nil {
-		return 500, nil, err
-	}
-
-	if method == "GET" || method == "POST" || method == "PUT" || method == "PATCH" || method == "DELETE" {
-		req.Header.Add("Content-Type", header.ContentType)
-	}
-
-	req.Header.Add("X-Auth-Token", header.XAuthToken)
-
-	resp, err := client.Do(req)
-
-	if err != nil {
-		return 500, nil, err
-	}
-
-	defer resp.Body.Close()
-
-	respBody, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return 500, nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		var errMsg FCError
-		json.Unmarshal(respBody, &errMsg)
-
-		return resp.StatusCode, nil, &errMsg
-	}
-
-	return resp.StatusCode, respBody, nil
-}
-
-func CallFCAPI(token, method, fp string, body []byte, cfg *APICallerConfig) ([]byte, error) {
-	client := http.Client{
-		Timeout: cfg.Timeout,
-	}
-
-	req, err := http.NewRequest(method, (urls["stage"] + fp), bytes.NewBuffer(body))
-	if err != nil {
+		cfg.Logger.Fatalln("[Func CallFundconnextAPI] Error create new request failed", err)
 		return nil, err
 	}
+	cfg.Logger.Infof("[Func CallFundconnextAPI] Debug call %s %s \n",method, url)
 
-	if method == "POST" || method == "PUT" || method == "PATCH" || method == "DELETE" {
-		req.Header.Add("Content-Type", "application/json")
+	contentType := "application/json"
+	if cfg.ContentType != "" {
+		contentType = cfg.ContentType
 	}
+	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("X-Auth-Token", token)
 
 	resp, err := client.Do(req)
 	if err != nil {
+		cfg.Logger.Fatalln("[Func CallFundconnextAPI] Error request failed", err)
 		return nil, err
 	}
 
@@ -118,56 +126,12 @@ func CallFCAPI(token, method, fp string, body []byte, cfg *APICallerConfig) ([]b
 
 	if resp.StatusCode != 200 {
 		var errMsg FCError
-		json.Unmarshal(respBody, &errMsg)
+		cfg.Logger.Fatalln("[Func CallFundconnextAPI] Error request failed", err)
+		if err := json.Unmarshal(respBody, &errMsg); err != nil {
+			return nil, err
+		}
 		return nil, &errMsg
 	}
-	return respBody, nil
-}
-
-//CallFCAPIV2 ...
-func CallFCAPIV2(token, method, fp string, body io.Reader, cfg *APICallerConfig, contentType string) ([]byte, error) {
-	client := http.Client{
-		Timeout: cfg.Timeout,
-	}
-
-	req, err := http.NewRequest(method, (urls["stage"] + fp), body)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if method == "POST" || method == "PUT" || method == "PATCH" || method == "DELETE" {
-		req.Header.Add("Content-Type", contentType)
-		log.Println("Content-Type :: ", contentType)
-	}
-
-	req.Header.Add("X-Auth-Token", token)
-
-	resp, err := client.Do(req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-
-	respBody, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		return nil, err
-	}
-
-	log.Println("resp.StatusCode ::", resp.StatusCode)
-	log.Println("resp.Body ::", string(respBody))
-	log.Println("resp.Header ::", resp.Header)
-
-	if resp.StatusCode != 200 {
-		var errMsg FCError
-		json.Unmarshal(respBody, &errMsg)
-
-		return nil, &errMsg
-	}
-
 	return respBody, nil
 }
 

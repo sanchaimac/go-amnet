@@ -1,6 +1,6 @@
 package data
 
-// DividendNews ...
+// DividendNewsData ...
 type DividendNewsData struct {
 	FundTaxID         string
 	FundCode          string
@@ -29,7 +29,7 @@ type DividendNewsData struct {
 	Filler6           *string
 }
 
-// Dividend ...
+// DividendUHIDConfirmation ...
 type DividendUHIDConfirmation struct {
 	FundCode                  string
 	BookClosedDate            string
@@ -38,7 +38,7 @@ type DividendUHIDConfirmation struct {
 	UnitholderID              string
 	Unit                      float64
 	DividendAmount            float64
-	WitholdingTax             float64
+	WithHoldingTax             float64
 	DividendAmountNet         float64
 	PaymentType               *string
 	BankCode                  string

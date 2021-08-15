@@ -49,9 +49,9 @@ func (d *Download) Scan(requestedStruct interface{}) error {
 
 // Download FundConnext file (can save multiple paths)
 func (f *FundConnext) Download(asOfDate string, fileType data.FundConnextFileType, optionalSavePath ...string) (result Download, err error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/files/%s/%s.zip", asOfDate, fileType.String())
-	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	// out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg) out, err := f.APICall("GET", url, make([]byte, 0))
+	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
 		return result, err
 	}

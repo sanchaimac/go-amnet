@@ -85,13 +85,13 @@ type TransactionIDResponse struct {
 }
 
 func (f *FundConnext) CreateSubscription(subOrder SubscriptionOrder) (*SubscriptionResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/subscriptions"
 	body, err := json.Marshal(subOrder)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	resp, err := f.APICall("POST", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -104,13 +104,13 @@ func (f *FundConnext) CreateSubscription(subOrder SubscriptionOrder) (*Subscript
 }
 
 func (f *FundConnext) CreateSubscriptionV2(subOrder SubscriptionOrder) (*SubscriptionResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/subscriptions/v2"
 	body, err := json.Marshal(subOrder)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	resp, err := f.APICall("POST", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -123,13 +123,13 @@ func (f *FundConnext) CreateSubscriptionV2(subOrder SubscriptionOrder) (*Subscri
 }
 
 func (f *FundConnext) CreateSubscriptionBasketOrder(subOrder SubscriptionBasketOrder) (*SubscriptionBasketResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/subscriptions/basket"
 	body, err := json.Marshal(subOrder)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	resp, err := f.APICall("POST", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,6 @@ func (f *FundConnext) CreateSubscriptionBasketOrder(subOrder SubscriptionBasketO
 }
 
 func (f *FundConnext) CancelSubscription(transactionId, force string) (*TransactionIDResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/subscriptions/%s", transactionId)
 	body, err := json.Marshal(map[string]string{
 		"force": force,
@@ -150,7 +149,8 @@ func (f *FundConnext) CancelSubscription(transactionId, force string) (*Transact
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "DELETE", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "DELETE", url, body, cfg)
+	resp, err := f.APICall("DELETE", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,6 @@ func (f *FundConnext) CancelSubscription(transactionId, force string) (*Transact
 }
 
 func (f *FundConnext) ApproveSubscription(transactionId, status string) (*TransactionIDResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/subscriptions/%s", transactionId)
 	body, err := json.Marshal(map[string]string{
 		"status": status,
@@ -171,7 +170,8 @@ func (f *FundConnext) ApproveSubscription(transactionId, status string) (*Transa
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "PATCH", url, body, cfg)
+	//resp, err := CallFCAPI(f.token, "PATCH", url, body, cfg)
+	resp, err := f.APICall("PATCH", url, body)
 	if err != nil {
 		return nil, err
 	}

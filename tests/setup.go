@@ -2,11 +2,11 @@ package tests
 
 import (
 	"errors"
-	"os"
-	"path"
-
 	FC "github.com/codefin-stack/go-fundconnext"
 	godotenv "github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
+	"os"
+	"path"
 )
 
 var (
@@ -30,15 +30,14 @@ func NewFundConnext() (*FC.FundConnext, error) {
 	if password, found = os.LookupEnv("FC_PASSWORD"); !found {
 		return nil, ErrPasswordIsNotDefined
 	}
-	fc := FC.MakeFundconnext()
-
-	fc.Configure(&FC.FCConfiguration{
+	logger := log.New()
+	logger.SetLevel(log.FatalLevel)
+	fc := FC.New(&FC.FCConfiguration{
 		Username: username,
 		Password: password,
+		Env: "staging",
+		Logger: logger,
 	})
 
-	if err := fc.Start(); err != nil {
-		panic(err)
-	}
 	return fc, nil
 }

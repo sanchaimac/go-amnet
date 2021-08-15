@@ -34,13 +34,12 @@ type SwitchingOrderResponse struct {
 }
 
 func (f *FundConnext) CreateSwitching(switching SwitchingOrder) (*SwitchingOrderResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/switchings/"
 	body, err := json.Marshal(switching)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	resp, err := f.APICall("POST", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +52,6 @@ func (f *FundConnext) CreateSwitching(switching SwitchingOrder) (*SwitchingOrder
 }
 
 func (f *FundConnext) ApproveSwitching(transactionId, status string) (*TransactionIDResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/switchings/%s", transactionId)
 	body, err := json.Marshal(map[string]string{
 		"status": status,
@@ -61,7 +59,7 @@ func (f *FundConnext) ApproveSwitching(transactionId, status string) (*Transacti
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "PATCH", url, body, cfg)
+	resp, err := f.APICall("PATCH", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +72,6 @@ func (f *FundConnext) ApproveSwitching(transactionId, status string) (*Transacti
 }
 
 func (f *FundConnext) CancelSwitching(transactionId, force string) (*TransactionIDResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/switchings/%s", transactionId)
 	body, err := json.Marshal(map[string]string{
 		"force": force,
@@ -82,7 +79,7 @@ func (f *FundConnext) CancelSwitching(transactionId, force string) (*Transaction
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "DELETE", url, body, cfg)
+	resp, err := f.APICall("DELETE", url, body)
 	if err != nil {
 		return nil, err
 	}

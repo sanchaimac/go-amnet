@@ -1,6 +1,6 @@
 package data
 
-// FundNAV ...
+// FundMappingData ...
 type FundMappingData struct {
 	AmcCode  string
 	FundCode string
@@ -21,8 +21,8 @@ type FundProfileData struct {
 	FXRiskFlag             string
 	FATCAAllowFlag         string
 	BuyCutOffTime          string
-	FstLowbuyVal           *float64
-	NxtLowbuyVal           *float64
+	FstLowBuyVal           *float64
+	NxtLowBuyVal           *float64
 	SellCutOffTime         string
 	LowSellVal             *float64
 	LowSellUnit            *float64
@@ -35,8 +35,8 @@ type FundProfileData struct {
 	FundClass              *string
 	BuyPeriodFlag          string
 	SellPeriodFlag         string
-	SwitchInPerioldFlag    *string
-	SwitchOutPerioldFlag   *string
+	SwitchInPeriodFlag    *string
+	SwitchOutPeriodFlag   *string
 	BuyPreOrderDay         float64
 	SellPreOrderDay        float64
 	SwitchPreOrderDay      float64
@@ -47,7 +47,7 @@ type FundProfileData struct {
 	DerivativesFlag        string
 	LagAllocationDay       uint64
 	SettlementHolidayFlag  string
-	HealthInsurrance       string
+	HealthInsurance       string
 	PreviousFundCode       *string
 	InvestorAlert          *string
 	ISIN                   *string
@@ -86,7 +86,7 @@ type FeeData struct {
 	ActualFee     *float64
 	MinimumFee    *float64
 	Remark        *string
-	Maximum_Value *float64
+	MaximumValue *float64
 	Filler1       *string
 	Filler2       *string
 	Filler3       *string
@@ -100,7 +100,7 @@ type FeeData struct {
 	Filler11      *string
 }
 
-// FundPerformanceData...
+// FundPerformanceData ...
 type FundPerformanceData struct {
 	FundCode   string
 	PYTDReturn *float64

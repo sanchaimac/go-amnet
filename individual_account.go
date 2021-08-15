@@ -1,13 +1,12 @@
 package fundconnext
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 )
 
-// Verified V4
+// BankAccount Verified V4
 type BankAccount struct {
 	BankCode         string  `json:"bankCode"`
 	BankBranchCode   *string `json:"bankBranchCode"`
@@ -43,26 +42,15 @@ type IndividualAccountFile struct {
 }
 
 func (f *FundConnext) CreateIndividualAccount(individualAccDoc IndividualAccountDocument) error {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/customer/individual/account/v4"
-
 	body, err := json.Marshal(individualAccDoc)
-
 	if err != nil {
-		fmt.Println("[Func CreateIndividualAccount] Error json.Marshal ::", err)
+		f.cfg.Logger.Fatalln("[Func CreateIndividualAccount] Error json.Marshal ::", err)
 		return err
 	}
-
-	header := Headers{
-		ContentType: "application/json",
-		XAuthToken:  f.token,
-	}
-
-	// _, err = CallFCAPI(f.token, "POST", url, body, cfg)
-	_, _, err = CallToFundConnext(cfg, "POST", url, header, bytes.NewBuffer(body))
-
+	_, err = f.APICall("POST", url, body)
 	if err != nil {
-		fmt.Println("[Func CreateIndividualAccount] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Fatalln("[Func CreateIndividualAccount] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -70,26 +58,15 @@ func (f *FundConnext) CreateIndividualAccount(individualAccDoc IndividualAccount
 }
 
 func (f *FundConnext) UpdateIndividualAccount(individualAccDoc IndividualAccountDocument) error {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/customer/individual/account/v4"
-
 	body, err := json.Marshal(individualAccDoc)
-
 	if err != nil {
-		fmt.Println("[Func UpdateIndividualAccount] Error json.Marshal ::", err)
+		f.cfg.Logger.Fatalln("[Func UpdateIndividualAccount] Error json.Marshal ::", err)
 		return err
 	}
-
-	header := Headers{
-		ContentType: "application/json",
-		XAuthToken:  f.token,
-	}
-
-	// _, err = CallFCAPI(f.token, "PUT", url, body, cfg)
-	_, _, err = CallToFundConnext(cfg, "PUT", url, header, bytes.NewBuffer(body))
-
+	_, err = f.APICall("PUT",url, body)
 	if err != nil {
-		fmt.Println("[Func UpdateIndividualAccount] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Fatalln("[Func UpdateIndividualAccount] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -111,18 +88,11 @@ func (f *FundConnext) UpdateIndividualAccount(individualAccDoc IndividualAccount
 // 	return nil
 // }
 
-func (f *FundConnext) UploadIndividualAccountFile(fileType string, header Headers, body io.Reader) error {
-	var err error
-
-	cfg := MakeAPICallerConfig(f)
+func (f *FundConnext) UploadIndividualAccountFile(fileType string, body io.Reader) error {
 	url := fmt.Sprintf("/api/customer/individual/account/%s/upload", fileType)
-	header.XAuthToken = f.token
-	// body, err := json.Marshal(individualCustomerFile)  /api/customer/individual/account/:fileType/upload
-
-	// _, err = CallFCAPIV2(f.token, "POST", url, body, cfg, contentType)
-	_, _, err = CallToFundConnext(cfg, "POST", url, header, body)
-
+	_, err := f.APICallFormData("POST", url, body)
 	if err != nil {
+		f.cfg.Logger.Fatalln("[Func UploadIndividualAccountFile] Error CallToFundConnext ::", err)
 		return err
 	}
 

@@ -25,12 +25,12 @@ type RetrievalIndividualCustomerProfileAndAccount struct {
 	Fax                            *string             `json:"fax"`
 	MaritalStatus                  string              `json:"maritalStatus"`
 	Spouse                         interface{}         `json:"spouse"`
-	OccupationId                   string              `json:"occupationId"`
+	OccupationId                   uint64              `json:"occupationId"`
 	OccupationOther                *string             `json:"occupationOther"`
-	BusinessTypeId                 *string             `json:"businessTypeId"`
+	BusinessTypeId                 *uint64             `json:"businessTypeId"`
 	BusinessTypeOther              *string             `json:"businessTypeOther"`
 	MonthlyIncomeLevel             string              `json:"monthlyIncomeLevel"`
-	AssetValue                     *float64            `json:"assetValue"`
+	AssetValue                     *string             `json:"assetValue"`
 	IncomeSource                   string              `json:"incomeSource"`
 	IncomeSourceOther              *string             `json:"incomeSourceOther"`
 	IdentificationDocument         Address             `json:"identificationDocument"`
@@ -81,13 +81,18 @@ type RetrievalAccount struct {
 }
 
 func (f *FundConnext) RetrieveIndividualCustomerProfileAndAccount(cardNumber string) (*RetrievalIndividualCustomerProfileAndAccount, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/customer/individual/investor/profile/v4?cardNumber=%s", cardNumber)
-	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+
+	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
+		f.cfg.Logger.Fatalln("[Func RetrieveIndividualCustomerProfileAndAccount] Error CallToFundConnext ::", err)
 		return nil, err
 	}
+
 	var results *RetrievalIndividualCustomerProfileAndAccount
-	json.Unmarshal(out, &results)
+	if err := json.Unmarshal(out, &results); err != nil {
+		f.cfg.Logger.Fatalln("[Func RetrieveIndividualCustomerProfileAndAccount] Error json.Marshal ::", err)
+		return nil, err
+	}
 	return results, nil
 }

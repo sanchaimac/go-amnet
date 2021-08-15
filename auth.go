@@ -4,26 +4,29 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type AuthResponse struct {
 	Username    string `json:"username"`
 	AccessToken string `json:"access_token"`
 	SACode      string `json:"sa_code"`
+	Claims      *AuthClaims
 }
 
 type AuthClaims struct {
-	IssuedAt         string `json:"iat"`
-	ExpiredAt        string `json:"exp"`
+	jwt.StandardClaims
 	SellingAgentCode string `json:"sellingAgentCode"`
 	SellingAgentId   string `json:"sellingAgentId"`
 	Username         string `json:"username"`
 }
 
-func Login(username, password string) (*AuthResponse, error) {
+func Login(env, username, password string) (*AuthResponse, error) {
 	timeout := time.Duration(10 * time.Second)
 	client := http.Client{
 		Timeout: timeout,
@@ -38,7 +41,7 @@ func Login(username, password string) (*AuthResponse, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", "https://stage.fundconnext.com/api/auth", bytes.NewBuffer(reqBody))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/auth",env), bytes.NewBuffer(reqBody))
 	if err != nil {
 		return nil, MakeInternalError(err.Error())
 	}
@@ -58,11 +61,21 @@ func Login(username, password string) (*AuthResponse, error) {
 	}
 	if resp.StatusCode != 200 {
 		var errMsg FCError
-		json.Unmarshal(body, &errMsg)
+		if err := json.Unmarshal(body, &errMsg); err != nil {
+			return nil, err
+		}
 		return nil, &errMsg
 	}
 
 	var authResp AuthResponse
-	json.Unmarshal(body, &authResp)
+	if err := json.Unmarshal(body, &authResp); err != nil {
+		return nil, err
+	}
+	token, _ := jwt.ParseWithClaims(authResp.AccessToken, &AuthClaims{}, nil)
+	if err != nil {
+		panic(err)
+	}
+	c := token.Claims.(*AuthClaims)
+	authResp.Claims = c
 	return &authResp, nil
 }

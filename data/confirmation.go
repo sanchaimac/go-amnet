@@ -91,7 +91,7 @@ type AllottedTransactionData struct {
 	AllotmentDate                      *string
 	AllottedNAV                        *float64
 	AllottedAmount                     *float64
-	AllotedUnit                        *float64
+	AllottedUnit                        *float64
 	Fee                                *float64
 	WithholdingTax                     *float64
 	VAT                                *float64

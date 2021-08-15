@@ -49,19 +49,20 @@ type OrderInquiryResults struct {
 }
 
 func (f *FundConnext) OrderInquiryByAccountNo(accountNo, begEffectiveDate, endEffectiveDate string) (*OrderInquiryResults, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/account/fundOrders?accountNo=%s&begEffectiveDate=%s&endEffectiveDate=%s", accountNo, begEffectiveDate, endEffectiveDate)
-	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	// out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
 		return nil, err
 	}
 	var results *OrderInquiryResults
-	json.Unmarshal(out, &results)
+	if err := json.Unmarshal(out, &results); err != nil {
+		return nil, err
+	}
 	return results, nil
 }
 
 func (f *FundConnext) OrderInquiryByEffectiveDate(effectiveDate string, status *string, channel *string, recuringFlag *string) (*OrderInquiryResults, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/fundOrders?effectiveDate=%s", effectiveDate)
 	if status != nil {
 		url += fmt.Sprintf("&status=%s", *status)
@@ -72,24 +73,28 @@ func (f *FundConnext) OrderInquiryByEffectiveDate(effectiveDate string, status *
 	if recuringFlag != nil {
 		url += fmt.Sprintf("&recuringFlag%s", *recuringFlag)
 	}
-	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	// out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
 		return nil, err
 	}
 	var results *OrderInquiryResults
-	fmt.Println(string(out))
-	json.Unmarshal(out, &results)
+	if err := json.Unmarshal(out, &results); err != nil {
+		return nil, err
+	}
 	return results, nil
 }
 
 func (f *FundConnext) OrderInquiryBySAReferenceNo(saRefNo string) (*OrderInquiryResults, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/fundOrders/saOrderReferenceNo?saOrderReferenceNo=%s", saRefNo)
-	out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	// out, err := CallFCAPI(f.token, "GET", url, make([]byte, 0), cfg)
+	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
 		return nil, err
 	}
 	var results *OrderInquiryResults
-	json.Unmarshal(out, &results)
+	if err := json.Unmarshal(out, &results); err != nil {
+		return nil, err
+	}
 	return results, nil
 }

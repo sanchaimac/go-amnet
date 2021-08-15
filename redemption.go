@@ -40,13 +40,13 @@ type RedemptionOrderResponse struct {
 }
 
 func (f *FundConnext) CreateRedemption(redemption RedemptionOrder) (*RedemptionOrderResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := "/api/redemptions/"
 	body, err := json.Marshal(redemption)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "POST", url, body, cfg)
+	resp, err := f.APICall("POST", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,6 @@ func (f *FundConnext) CreateRedemption(redemption RedemptionOrder) (*RedemptionO
 }
 
 func (f *FundConnext) CancelRedemption(transactionId, force string) (*TransactionIDResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/redemptions/%s", transactionId)
 	body, err := json.Marshal(map[string]string{
 		"force": force,
@@ -67,7 +66,8 @@ func (f *FundConnext) CancelRedemption(transactionId, force string) (*Transactio
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "DELETE", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "DELETE", url, body, cfg)
+	resp, err := f.APICall("DELETE", url, body)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,6 @@ func (f *FundConnext) CancelRedemption(transactionId, force string) (*Transactio
 }
 
 func (f *FundConnext) ApproveRedemption(transactionId, status string) (*TransactionIDResponse, error) {
-	cfg := MakeAPICallerConfig(f)
 	url := fmt.Sprintf("/api/redemptions/%s", transactionId)
 	body, err := json.Marshal(map[string]string{
 		"status": status,
@@ -88,7 +87,8 @@ func (f *FundConnext) ApproveRedemption(transactionId, status string) (*Transact
 	if err != nil {
 		return nil, err
 	}
-	resp, err := CallFCAPI(f.token, "PATCH", url, body, cfg)
+	// resp, err := CallFCAPI(f.token, "PATCH", url, body, cfg)
+	resp, err := f.APICall("PATCH", url, body)
 	if err != nil {
 		return nil, err
 	}

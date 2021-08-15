@@ -85,13 +85,13 @@ func (f *FundConnext) RetrieveIndividualCustomerProfileAndAccount(cardNumber str
 
 	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func RetrieveIndividualCustomerProfileAndAccount] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func RetrieveIndividualCustomerProfileAndAccount] Error CallToFundConnext ::", err)
 		return nil, err
 	}
 
 	var results *RetrievalIndividualCustomerProfileAndAccount
 	if err := json.Unmarshal(out, &results); err != nil {
-		f.cfg.Logger.Fatalln("[Func RetrieveIndividualCustomerProfileAndAccount] Error json.Marshal ::", err)
+		f.cfg.Logger.Error("[Func RetrieveIndividualCustomerProfileAndAccount] Error json.Marshal ::", err)
 		return nil, err
 	}
 	return results, nil

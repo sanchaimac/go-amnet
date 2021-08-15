@@ -100,11 +100,10 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 
 	req, err := http.NewRequest(method, url, reqReader)
 	if err != nil {
-		cfg.Logger.Fatalln("[Func CallFundconnextAPI] Error create new request failed", err)
+		cfg.Logger.Error("[Func CallFundconnextAPI] Error create new request failed", err)
 		return nil, err
 	}
-	cfg.Logger.Infof("[Func CallFundconnextAPI] Debug call %s %s \n",method, url)
-
+	cfg.Logger.Debugf("[Func CallFundconnextAPI] Debug call %s %s",method, url)
 	contentType := "application/json"
 	if cfg.ContentType != "" {
 		contentType = cfg.ContentType
@@ -114,7 +113,7 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 
 	resp, err := client.Do(req)
 	if err != nil {
-		cfg.Logger.Fatalln("[Func CallFundconnextAPI] Error request failed", err)
+		cfg.Logger.Error("[Func CallFundconnextAPI] Error request failed", err)
 		return nil, err
 	}
 
@@ -126,7 +125,7 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 
 	if resp.StatusCode != 200 {
 		var errMsg FCError
-		cfg.Logger.Fatalln("[Func CallFundconnextAPI] Error request failed", err)
+		cfg.Logger.Error("[Func CallFundconnextAPI] Error request failed", err)
 		if err := json.Unmarshal(respBody, &errMsg); err != nil {
 			return nil, err
 		}

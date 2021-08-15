@@ -131,13 +131,13 @@ func (f *FundConnext) CreateIndividualCustomer(identificationDoc IndividualCusto
 	body, err := json.Marshal(identificationDoc)
 
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func CreateIndividualCustomer] Error json.Marshal ::", err)
+		f.cfg.Logger.Error("[Func CreateIndividualCustomer] Error json.Marshal ::", err)
 		return err
 	}
 
 	_, err = f.APICall("POST", url, body)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func CreateIndividualCustomer] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func CreateIndividualCustomer] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -149,13 +149,13 @@ func (f *FundConnext) UpdateIndividualCustomer(identificationDoc IndividualCusto
 	body, err := json.Marshal(identificationDoc)
 
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UpdateIndividualCustomer] Error json.Marshal ::", err)
+		f.cfg.Logger.Error("[Func UpdateIndividualCustomer] Error json.Marshal ::", err)
 		return err
 	}
 
 	_, err = f.APICall("PUT", url, body)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UpdateIndividualCustomer] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func UpdateIndividualCustomer] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -166,12 +166,12 @@ func (f *FundConnext) UpdatePartialIndividualCustomer(partialIndividualCustomerD
 	url := "/api/customer/individual"
 	body, err := json.Marshal(partialIndividualCustomerDocument)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UpdatePartialIndividualCustomer] Error json.Marshal ::", err)
+		f.cfg.Logger.Error("[Func UpdatePartialIndividualCustomer] Error json.Marshal ::", err)
 		return err
 	}
 	_, err = f.APICall("PATCH", url, body)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UpdatePartialIndividualCustomer] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func UpdatePartialIndividualCustomer] Error CallToFundConnext ::", err)
 		return err
 	}
 	return nil

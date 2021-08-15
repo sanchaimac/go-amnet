@@ -45,12 +45,12 @@ func (f *FundConnext) CreateIndividualAccount(individualAccDoc IndividualAccount
 	url := "/api/customer/individual/account/v4"
 	body, err := json.Marshal(individualAccDoc)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func CreateIndividualAccount] Error json.Marshal ::", err)
+		f.cfg.Logger.Error("[Func CreateIndividualAccount] Error json.Marshal ::", err)
 		return err
 	}
 	_, err = f.APICall("POST", url, body)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func CreateIndividualAccount] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func CreateIndividualAccount] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -61,12 +61,12 @@ func (f *FundConnext) UpdateIndividualAccount(individualAccDoc IndividualAccount
 	url := "/api/customer/individual/account/v4"
 	body, err := json.Marshal(individualAccDoc)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UpdateIndividualAccount] Error json.Marshal ::", err)
+		f.cfg.Logger.Error("[Func UpdateIndividualAccount] Error json.Marshal ::", err)
 		return err
 	}
 	_, err = f.APICall("PUT",url, body)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UpdateIndividualAccount] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func UpdateIndividualAccount] Error CallToFundConnext ::", err)
 		return err
 	}
 
@@ -92,7 +92,7 @@ func (f *FundConnext) UploadIndividualAccountFile(fileType string, body io.Reade
 	url := fmt.Sprintf("/api/customer/individual/account/%s/upload", fileType)
 	_, err := f.APICallFormData("POST", url, body)
 	if err != nil {
-		f.cfg.Logger.Fatalln("[Func UploadIndividualAccountFile] Error CallToFundConnext ::", err)
+		f.cfg.Logger.Error("[Func UploadIndividualAccountFile] Error CallToFundConnext ::", err)
 		return err
 	}
 

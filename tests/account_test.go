@@ -9,8 +9,9 @@ func TestAccount(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	_, err = fc.RetrieveIndividualCustomerProfileAndAccount("1100701324225")
+	profile, err := fc.RetrieveIndividualCustomerProfileAndAccount("1100701324225") // 1100701324225
 	if err != nil {
 		t.Error(err)
 	}
+	t.Log(profile.CddScore)
 }

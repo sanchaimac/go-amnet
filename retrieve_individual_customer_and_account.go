@@ -47,7 +47,7 @@ type RetrievalIndividualCustomerProfileAndAccount struct {
 	SuitabilityEvaluationDate      string              `json:"suitabilityEvaluationDate"`
 	Fatca                          bool                `json:"fatca"`
 	FatcaDeclarationDate           string              `json:"fatcaDeclarationDate"`
-	CddScore                       *string             `json:"cddScore"`
+	CddScore                       *float64            `json:"cddScore"`
 	CddDate                        *string             `json:"cddDate"`
 	ReferralPerson                 *string             `json:"referralPerson"`
 	ApplicationDate                string              `json:"applicationDate"`

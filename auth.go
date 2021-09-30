@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -26,10 +27,19 @@ type AuthClaims struct {
 	Username         string `json:"username"`
 }
 
-func Login(env, username, password string) (*AuthResponse, error) {
+func Login(env, username, password, proxy string) (*AuthResponse, error) {
 	timeout := time.Duration(10 * time.Second)
 	client := http.Client{
 		Timeout: timeout,
+	}
+	if proxy != "" {
+		transport, err := setProxy(&HTTPSetting{
+			Proxy: proxy,
+		})
+		if err != nil {
+			return nil, err
+		}
+		client.Transport = transport
 	}
 
 	reqBody, err := json.Marshal(map[string]string{
@@ -41,7 +51,8 @@ func Login(env, username, password string) (*AuthResponse, error) {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/auth",env), bytes.NewBuffer(reqBody))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/auth", env), bytes.NewBuffer(reqBody))
+	log.Println(`pass http.NewRequest("POST", fmt.Sprintf("/api/auth",env), bytes.NewBuffer(reqBody))`)
 	if err != nil {
 		return nil, MakeInternalError(err.Error())
 	}
@@ -53,6 +64,7 @@ func Login(env, username, password string) (*AuthResponse, error) {
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	log.Println(`ioutil.ReadAll(resp.Body)`)
 	if err != nil {
 		return nil, err
 	}

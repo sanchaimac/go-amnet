@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -58,12 +57,12 @@ func (f *FundConnext) Download(asOfDate string, fileType data.FundConnextFileTyp
 
 	saveErr := saveFile(out, optionalSavePath)
 	if saveErr != nil {
-		log.Fatal(saveErr)
+		return Download{}, saveErr
 	}
 
 	zipReader, err := zip.NewReader(bytes.NewReader(out), int64(len(out)))
 	if err != nil {
-		log.Fatal(err)
+		return Download{}, err
 	}
 
 	if zipReader == nil || zipReader.File[0] == nil {
@@ -78,19 +77,16 @@ func (f *FundConnext) Download(asOfDate string, fileType data.FundConnextFileTyp
 func saveFile(data []byte, fullPath []string) error {
 
 	if len(data) <= 0 || len(fullPath) <= 0 {
-		log.Println(errors.New("(Skip) Either Empty Data or No Path"))
 		return nil
 	}
 
 	for _, path := range fullPath {
 		if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
-			log.Println(errors.New("can't Save file"))
 			return err
 		}
 
 		out, err := os.Create(path)
 		if err != nil {
-			log.Println(errors.New("can't Save file"))
 			return err
 		}
 
@@ -99,7 +95,6 @@ func saveFile(data []byte, fullPath []string) error {
 		// Write the body to file
 		_, err = io.Copy(out, bytes.NewBuffer(data))
 		if err != nil {
-			log.Println(errors.New("can't Write file"))
 			return err
 		}
 	}

@@ -83,6 +83,7 @@ func MakeAPICallerConfig(f *FundConnext) *APICallerConfig {
 	return &APICallerConfig{
 		Timeout: &f.cfg.Timeout,
 		Logger:  f.cfg.Logger,
+		Proxy:   f.cfg.Proxy,
 	}
 }
 

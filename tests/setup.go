@@ -2,11 +2,12 @@ package tests
 
 import (
 	"errors"
+	"os"
+	"path"
+
 	FC "github.com/codefin-stack/go-fundconnext"
 	godotenv "github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
-	"os"
-	"path"
 )
 
 var (
@@ -35,8 +36,8 @@ func NewFundConnext() (*FC.FundConnext, error) {
 	fc := FC.New(&FC.FCConfiguration{
 		Username: username,
 		Password: password,
-		Env: "staging",
-		Logger: logger,
+		Env:      "staging",
+		Logger:   logger,
 	})
 
 	return fc, nil

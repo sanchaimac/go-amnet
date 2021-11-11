@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -52,7 +51,6 @@ func Login(env, username, password, proxy string) (*AuthResponse, error) {
 	}
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/auth", env), bytes.NewBuffer(reqBody))
-	log.Println(`pass http.NewRequest("POST", fmt.Sprintf("/api/auth",env), bytes.NewBuffer(reqBody))`)
 	if err != nil {
 		return nil, MakeInternalError(err.Error())
 	}
@@ -64,7 +62,6 @@ func Login(env, username, password, proxy string) (*AuthResponse, error) {
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println(`ioutil.ReadAll(resp.Body)`)
 	if err != nil {
 		return nil, err
 	}

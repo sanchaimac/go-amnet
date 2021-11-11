@@ -14,8 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type HTTPSetting struct {
@@ -214,7 +212,6 @@ func CheckStruct(structValue interface{}) {
 func StringToInt(text string) int {
 	number, err := strconv.Atoi(text)
 	if err != nil {
-		log.Println(err)
 		return 0
 	}
 	return number

@@ -133,6 +133,9 @@ func parseDownloadFile(zipFile *zip.File, fileType data.FundConnextFileType) (Do
 		reflectVal := reflect.New(downloadType)
 
 		for key, value := range lineData {
+			if key >= reflectVal.Elem().NumField() {
+				continue
+			}
 			if reflectVal.Elem().Field(key).CanSet() {
 				t, err := toReflectValue(value, reflectVal.Elem().Field(key).Interface())
 				if err != nil {

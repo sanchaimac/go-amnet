@@ -3,6 +3,7 @@ package fundconnext
 var (
 	UnAuthorizedError  = MakeFCError("E000", "Unauthorized access")
 	UnProcessableEntry = MakeFCError("EXXX", "Unprocessable entry")
+	LtfBalanceNotFound = MakeFCError("E339", "LTF Balance Not Found")
 )
 
 type ErrMsg struct {

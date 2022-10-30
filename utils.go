@@ -162,13 +162,14 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 	if err != nil {
 		return nil, err
 	}
-
+	cfg.Logger.Info("[Func CallFundconnextAPI] Response: ", string(respBody))
 	if resp.StatusCode != 200 {
 		var errMsg FCError
-		cfg.Logger.Error("[Func CallFundconnextAPI] Error request failed", err)
 		if err := json.Unmarshal(respBody, &errMsg); err != nil {
+			cfg.Logger.Error("[Func CallFundconnextAPI] Unmarshal Error: ", err)
 			return nil, err
 		}
+		cfg.Logger.Error("[Func CallFundconnextAPI] Error request failed: ", errMsg)
 		return nil, &errMsg
 	}
 	return respBody, nil

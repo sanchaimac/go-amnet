@@ -29,9 +29,14 @@ type FCAuthentication struct {
 }
 
 type FundConnext struct {
+	In             IFundConnext
 	cfg            *FCConfiguration
 	token          string
 	authentication *FCAuthentication
+}
+
+type IFundConnext interface {
+	APICall(method, url string, req interface{}) ([]byte, error)
 }
 
 type FCConfiguration struct {
@@ -151,5 +156,6 @@ func (f *FundConnext) Configure(cfg *FCConfiguration) {
 func New(cfg *FCConfiguration) *FundConnext {
 	fc := new(FundConnext)
 	fc.Configure(cfg)
+	fc.In = fc
 	return fc
 }

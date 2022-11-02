@@ -15,7 +15,7 @@ func (f *FundConnext) LTFRedeemableUnitInquiry(unitholderId string, fundCode str
 	url := fmt.Sprintf("/api/ltfBalances/redeemableUnit?unitholderId=%s&fundCode=%s", unitholderId, fundCode)
 	f.cfg.Logger.Infoln("[Func LTFRedeemableUnitInquiry]: ", url)
 
-	out, err := f.APICall("GET", url, make([]byte, 0))
+	out, err := f.In.APICall("GET", url, make([]byte, 0))
 	if err != nil {
 		f.cfg.Logger.Infoln("[Func LTFRedeemableUnitInquiry] Call API Error:", err)
 		return nil, err

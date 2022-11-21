@@ -162,7 +162,7 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 	if err != nil {
 		return nil, err
 	}
-	cfg.Logger.Info("[Func CallFundconnextAPI] Response: ", string(respBody))
+	cfg.Logger.Info("[Func CallFundconnextAPI] Response: ", string(respBody), " StatusCode: ", resp.StatusCode)
 	if resp.StatusCode != 200 {
 		var errMsg FCError
 		if err := json.Unmarshal(respBody, &errMsg); err != nil {

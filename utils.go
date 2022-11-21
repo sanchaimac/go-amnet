@@ -143,7 +143,15 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 		cfg.Logger.Error("[Func CallFundconnextAPI] Error create new request failed", err)
 		return nil, err
 	}
-	cfg.Logger.Debugf("[Func CallFundconnextAPI] Debug call %s %s", method, url)
+	reqBody, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		cfg.Logger.Error("[Func CallFundconnextAPI] Error ioutil.ReadAll Request Body", err)
+	}
+	reqHeadersBytes, err := json.Marshal(req.Header)
+	if err != nil {
+		cfg.Logger.Error("[Func CallFundconnextAPI] Error Marshal Request Header", err)
+	}
+	cfg.Logger.Debugf("[Func CallFundconnextAPI] Debug call %s %s %s %s", method, url, string(reqHeadersBytes), string(reqBody))
 	contentType := "application/json"
 	if cfg.ContentType != "" {
 		contentType = cfg.ContentType

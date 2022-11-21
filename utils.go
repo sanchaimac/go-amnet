@@ -143,13 +143,22 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 		cfg.Logger.Error("[Func CallFundconnextAPI] Error create new request failed", err)
 		return nil, err
 	}
-	cfg.Logger.Debugf("[Func CallFundconnextAPI] Debug call %s %s", method, url)
+
 	contentType := "application/json"
 	if cfg.ContentType != "" {
 		contentType = cfg.ContentType
 	}
 	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("X-Auth-Token", token)
+	reqBody, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		cfg.Logger.Warning("[Func CallFundconnextAPI] Error ioutil.ReadAll Request Body", err)
+	}
+	reqHeadersBytes, err := json.Marshal(req.Header)
+	if err != nil {
+		cfg.Logger.Warning("[Func CallFundconnextAPI] Error Marshal Request Header", err)
+	}
+	cfg.Logger.Debugf("[Func CallFundconnextAPI] Debug call %s %s %s %s", method, url, string(reqHeadersBytes), string(reqBody))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -162,7 +171,7 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 	if err != nil {
 		return nil, err
 	}
-	cfg.Logger.Info("[Func CallFundconnextAPI] Response: ", string(respBody))
+	cfg.Logger.Info("[Func CallFundconnextAPI] Response: ", string(respBody), " StatusCode: ", resp.StatusCode)
 	if resp.StatusCode != 200 {
 		var errMsg FCError
 		if err := json.Unmarshal(respBody, &errMsg); err != nil {

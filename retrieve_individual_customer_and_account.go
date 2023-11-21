@@ -5,6 +5,12 @@ import (
 	"fmt"
 )
 
+type CrsDetail struct {
+	CountryOfTaxResidence string  `json:"countryOfTaxResidence"`
+	Tin                   string  `json:"tin"`
+	Reason                *string `json:"reason"`
+	ReasonDesc            *string `json:"reasonDesc"`
+}
 type RetrievalIndividualCustomerProfileAndAccount struct {
 	IdentificationCardType         string              `json:"identificationCardType"`
 	PassportCountry                *string             `json:"passportCountry"`
@@ -63,6 +69,13 @@ type RetrievalIndividualCustomerProfileAndAccount struct {
 	InvestorClass                  *string             `json:"investorClass"`
 	Accounts                       *[]RetrievalAccount `json:"accounts"`
 	ApprovedDate                   *string             `json:"approvedDate"`
+
+	// add from version 5
+	CrsPlaceOfBirthCountry                   *string     `json:"crsPlaceOfBirthCountry"`
+	CrsPlaceOfBirthCity                      *string     `json:"crsPlaceOfBirthCity"`
+	CrsTaxResidenceInCountriesOtherThanTheUs *bool       `json:"crsTaxResidenceInCountriesOtherThanTheUS"`
+	CrsDeclarationDate                       *string     `json:"crsDeclarationDate"`
+	CrsDetails                               []CrsDetail `json:"crsDetails"`
 }
 
 type RetrievalAccount struct {
@@ -81,7 +94,7 @@ type RetrievalAccount struct {
 }
 
 func (f *FundConnext) RetrieveIndividualCustomerProfileAndAccount(cardNumber string) (*RetrievalIndividualCustomerProfileAndAccount, error) {
-	url := fmt.Sprintf("/api/customer/individual/investor/profile/v4?cardNumber=%s", cardNumber)
+	url := fmt.Sprintf("/api/customer/individual/investor/profile/v5?cardNumber=%s", cardNumber)
 
 	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {

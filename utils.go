@@ -155,7 +155,21 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 	resp, err := client.Do(req)
 	if err != nil {
 		cfg.Logger.Error("[Func CallFundconnextAPI] Error request failed", err)
-		return nil, err
+		if strings.Contains(err.Error(), "EOF") {
+			retire := 3
+			for i := 1; i <= retire; i++ {
+				resp, err = client.Do(req)
+				if err == nil {
+					break
+				}
+				time.Sleep(time.Duration(i) * time.Second)
+			}
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			return nil, err
+		}
 	}
 
 	defer resp.Body.Close()

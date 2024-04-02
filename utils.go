@@ -170,7 +170,6 @@ func CallFCAPI(env, token, method, fp string, body interface{}, cfg *APICallerCo
 		} else {
 			return nil, err
 		}
-		return nil, err
 	}
 
 	defer resp.Body.Close()

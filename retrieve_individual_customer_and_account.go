@@ -94,8 +94,16 @@ type RetrievalAccount struct {
 	OpenOmnibusFormFlag      *bool          `json:"openOmnibusFormFlag"`
 }
 
-func (f *FundConnext) RetrieveIndividualCustomerProfileAndAccount(cardNumber string) (*RetrievalIndividualCustomerProfileAndAccount, error) {
-	url := fmt.Sprintf("/api/customer/individual/investor/profile/v5?cardNumber=%s", cardNumber)
+func (f *FundConnext) RetrieveIndividualCustomerProfileAndAccount(cardNumber, passportCountry string) (*RetrievalIndividualCustomerProfileAndAccount, error) {
+	f.cfg.Logger.Infof("[Func RetrieveIndividualCustomerProfileAndAccount] input CardNumber : %s passportCountry : %s", cardNumber, passportCountry)
+
+	url := "/api/customer/individual/investor/profile/v5"
+
+	if passportCountry != "" {
+		url = url + fmt.Sprintf("?cardNumber=%s&passportCountry=%s", cardNumber, passportCountry)
+	} else {
+		url = url + fmt.Sprintf("?cardNumber=%s", cardNumber)
+	}
 
 	out, err := f.APICall("GET", url, make([]byte, 0))
 	if err != nil {

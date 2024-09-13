@@ -1,4 +1,4 @@
-module github.com/codefin-stack/go-fundconnext
+module github.com/sanchaimac/go-amnet
 
 go 1.16
 

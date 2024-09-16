@@ -41,6 +41,7 @@ type FundConnext struct {
 
 type IFundConnext interface {
 	APICall(method, url string, req interface{}) ([]byte, error)
+	APICallAmnet(ctx context.Context, url string, req *graphql.Request) (interface{}, error)
 }
 
 type FCConfiguration struct {
